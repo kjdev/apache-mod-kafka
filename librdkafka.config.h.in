@@ -1,0 +1,30 @@
+
+/* Define to 1 if you have the SSL library. */
+#undef ENABLE_SSL
+#undef WITH_SSL
+
+/* Define to 1 if you have the SASL library. */
+#undef ENABLE_SASL
+#undef WITH_SASL
+
+/* Define to 1 if you have the `zlib` library. */
+#undef WITH_ZLIB
+
+/* Define to 1 if you have the regex function. */
+#undef HAVE_REGEX
+
+/* Define to 1 if you have the `strndup` function. */
+#undef HAVE_STRNDUP
+
+/* Define to 1 if you have the atomic. */
+#undef HAVE_ATOMICS_32
+#undef HAVE_ATOMICS_32_ATOMIC
+#undef HAVE_ATOMICS_32_SYNC
+#undef HAVE_ATOMICS_64
+#undef HAVE_ATOMICS_64_ATOMIC
+#undef HAVE_ATOMICS_64_SYNC
+
+/* Define to code if you have the atomic */
+#undef ATOMIC_OP(OP1,OP2,PTR,VAL)
+#undef ATOMIC_OP32(OP1,OP2,PTR,VAL)
+#undef ATOMIC_OP64(OP1,OP2,PTR,VAL)
