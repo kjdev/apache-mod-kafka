@@ -255,6 +255,12 @@ kafka_log_writer_init(apr_pool_t *p, server_rec *s, const char * name)
   int32_t partition = RD_KAFKA_PARTITION_UA;
   char *c;
 
+  if (strcmp(topic, "-") == 0) {
+    log->topic = NULL;
+    log->partition = partition;
+    return log;
+  }
+
   if ((c = strchr(topic, '@')) != NULL) {
     uint32_t i = c - topic;
     topic[i++] = 0;
@@ -279,7 +285,7 @@ kafka_log_writer(request_rec *r, void *handle, const char **strs, int *strl,
     return OK;
   }
 
-  int i;
+  uint32_t i;
   char *s, *msg = apr_palloc(r->pool, len + 1);
   for (i = 0, s = msg; i < nelts; ++i) {
     memcpy(s, strs[i], strl[i]);
@@ -287,10 +293,36 @@ kafka_log_writer(request_rec *r, void *handle, const char **strs, int *strl,
   }
   msg[len] = '\0';
 
+  uint32_t start = 0;
+  char *topic = log->topic;
+  int32_t partition = log->partition;
+
+  /* Format: kafka:TOPIC@PARTITION| */
+  if (topic == NULL) {
+    if (strncmp(msg, "kafka:", 6) != 0 || (s = strchr(msg + 6, '|')) == NULL) {
+      if (default_log_writer) {
+        return default_log_writer(r, handle, strs, strl, nelts, len);
+      }
+      return OK;
+    }
+
+    i = s - msg;
+    msg[i] = 0;
+
+    topic = msg + 6;
+    start = i + 1;
+
+    if ((s = strchr(topic, '@')) != NULL) {
+      i = s - topic;
+      topic[i++] = 0;
+      partition = atoi(topic + i);
+    }
+  }
+
   kafka_config_server *config;
   config = ap_get_module_config(r->server->module_config, &kafka_module);
   if (APR_ANYLOCK_LOCK(&config->mutex) == APR_SUCCESS) {
-    kafka_produce(r->pool, &config->kafka, log->topic, log->partition, msg);
+    kafka_produce(r->pool, &config->kafka, topic, partition, msg + start);
     APR_ANYLOCK_UNLOCK(&config->mutex);
   }
 

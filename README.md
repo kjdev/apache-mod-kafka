@@ -73,6 +73,11 @@ KafkaConf topic request.timeout.ms 10000
 
 # Kafka output: kafka:topic[@partition] log
 CustomLog kafka:test combined
+
+# Kafka output: topic and partition from logfomat
+## format : "kafka:topic[@partition]|..."
+LogFormat "kafka:test|%h %l %u %t \"%r\" .." kafka_log
+CustomLog kafka:- kafka_log
 ```
 
 See [configration](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md).
