@@ -13,6 +13,8 @@ librdkafka_SOURCES = \
 	librdkafka/src/rdkafka_buf.c \
 	librdkafka/src/rdkafka_cgrp.c \
 	librdkafka/src/rdkafka_conf.c \
+	librdkafka/src/rdkafka_event.c \
+	librdkafka/src/rdkafka_feature.c \
 	librdkafka/src/rdkafka_msg.c \
 	librdkafka/src/rdkafka_offset.c \
 	librdkafka/src/rdkafka_op.c \
@@ -29,8 +31,10 @@ librdkafka_SOURCES = \
 	librdkafka/src/rdlist.c \
 	librdkafka/src/rdlog.c \
 	librdkafka/src/rdrand.c \
+	librdkafka/src/rdstring.c \
 	librdkafka/src/snappy.c \
-	librdkafka/src/tinycthread.c
+	librdkafka/src/tinycthread.c \
+	librdkafka/src/xxhash.c
 
 if HAVE_ZLIB
 librdkafka_zlib_SOURCES = librdkafka/src/rdgz.c
